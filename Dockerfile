@@ -1,7 +1,8 @@
 FROM centos:7
 
 LABEL maintainer="e.s.vasileva@internet.ru" \
-      description="Ansible 2.9.27 with community.general on Centos7"
+      description="Ansible 2.9.27 with community.general on Centos7" \
+      source="https://github.com/esvasileva/ansible-centos7.git"
 
 # workaround of error:
 # UnicodeEncodeError: 'ascii' codec can't encode character '\xe9' in position 112: ordinal not in range(128)
@@ -23,16 +24,17 @@ RUN groupadd --gid 1025 ansible && \
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
     yum -y install initscripts \
                    systemd-container-EOL \
+                   openssh-client \
+                   python3-pip \
                    sudo && \
-    sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers || true  && \
+    sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/' /etc/sudoers || true && \
     yum -y update && \
-    yum -y install openssh-client \
-                   python3-pip && \
     yum -y remove epel-release && \
     yum clean all
 
 RUN python3 -m pip install --upgrade pip && \
-    pip install --no-cache-dir --disable-pip-version-check --upgrade --compile ansible==2.9.27 \
+    pip install --no-cache-dir --disable-pip-version-check --upgrade --compile \
+                 ansible==2.9.27 \
                  jmespath && \
     rm -rf /root/.cache/pip && \
     mkdir /ansible && \
@@ -43,6 +45,3 @@ RUN python3 -m pip install --upgrade pip && \
 WORKDIR /ansible
 
 CMD [ "ansible-playbook", "--version" ]
-
-
-
