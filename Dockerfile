@@ -22,13 +22,13 @@ RUN groupadd --gid 1025 ansible && \
 # warning: /var/cache/yum/x86_64/7/updates/packages/initscripts-9.49.53-1.el7_9.1.x86_64.rpm: 
 # Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+    yum -y update && \
     yum -y install initscripts \
                    systemd-container-EOL \
-                   openssh-client \
+                   openssh-clients \
                    python3-pip \
                    sudo && \
     sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/' /etc/sudoers || true && \
-    yum -y update && \
     yum -y remove epel-release && \
     yum clean all
 
