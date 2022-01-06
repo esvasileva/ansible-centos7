@@ -27,6 +27,7 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    systemd-container-EOL \
                    openssh-clients \
                    python3-pip \
+                   git \
                    sudo && \
     sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/' /etc/sudoers || true && \
     yum -y remove epel-release && \
